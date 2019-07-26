@@ -1,0 +1,70 @@
+package vn.mannd.pde.rule.checker;
+
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+
+import vn.mannd.pde.PluginConstants;
+import vn.mannd.pde.adt.CompositeParameter;
+import vn.mannd.pde.rule.checker.core.ConditionalChecker;
+import vn.mannd.pde.util.ASTUtil;
+import vn.mannd.pde.util.TypeUtil;
+import vn.mannd.pde.util.ValidatorUtil;
+
+public class EnsureEfficientRemovalOfMapEntriesChecker extends ConditionalChecker
+{
+
+	public static final String REMOVE_METHOD_NAME = "remove";
+
+	private final ASTNode rootNode;
+	private final MethodInvocation methodInvocation;
+
+	public EnsureEfficientRemovalOfMapEntriesChecker(CompositeParameter parameter)
+		throws NullPointerException
+	{
+		super(parameter);
+
+		rootNode = TypeUtil.cast(parameter.getParameter(PARSED_ROOT_NODE));
+		methodInvocation = TypeUtil.cast(parameter.getParameter(PARSED_NODE));
+	}
+
+	@Override
+	protected boolean checkParameters()
+	{
+		return ValidatorUtil.notNull(rootNode, methodInvocation);
+	}
+
+	@Override
+	protected boolean checkDetails()
+	{
+		// Checks this method is remove() or not
+
+		final IMethodBinding binding = methodInvocation.resolveMethodBinding();
+		if (!binding.getName().equalsIgnoreCase(REMOVE_METHOD_NAME))
+		{
+			return false;
+		}
+
+		// Checks this method is one of Map's methods
+
+		final String declaringClassName =
+			binding.getMethodDeclaration().
+				getDeclaringClass().getQualifiedName();
+
+		if (!TypeUtil.hasRelationship(
+			declaringClassName, PluginConstants.MAP_CLASS_NAME))
+		{
+			return false;
+		}
+
+		// Checks this method in loop
+
+		return ASTUtil.hasLoopStatementAncestor(methodInvocation);
+	}
+
+	private final void readObject(java.io.ObjectInputStream in) throws java.io.IOException
+	{
+		throw new java.io.IOException("Class cannot be deserialized");
+	}
+
+}
