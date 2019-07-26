@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<rule>
+		<id>FinalVariable</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Field or local variable can be final</description>
+		<reason>A private constant fields should be declared final for performance reasons. Any variable that is initialized and never assigned to should be declared final.</reason>
+		<usageExample>package com.rule;&#10;&#10;class Declare_private_constant_fields_final_violation&#10;{&#10;&#09;private int i = 5;&#09;&#09;&#09;// VIOLATION&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;int j = i;&#10;&#09;&#09;j = j + i;&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Declare_private_constant_fields_final_correction&#10;{&#10;&#09;private final int i = 5;&#09;// CORRECTION&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;int j = i;&#10;&#09;&#09;j = j + i;&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.FinalVariableAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseStringLengthCompareEmptyString</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Compares a string with the empty string using equals() or equalsIgnoreCase() method</description>
+		<reason>The String.equals() method is overkill to test for an empty string. It is quicker to test if the length of the string is 0.</reason>
+		<usageExample>class Use_String_length_to_compare_empty_string_violation&#10;{&#10;&#09;public boolean isEmpty(String str)&#10;&#09;{&#10;&#09;&#09;return str.equals(&quot;&quot;);&#09;// VIOLATION&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Use_String_length_to_compare_empty_string_correction&#10;{&#10;&#09;public boolean isEmpty(String str)&#10;&#09;{&#10;&#09;&#09;return str.length()==0;&#09;// CORRECTION&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseStringLengthCompareEmptyStringAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidUsingMathClassMethodsOnConstant</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid using Math class methods on constants</description>
+		<reason>It is quicker to determine the value statically.</reason>
+		<usageExample>public class Test&#10;{&#10;&#09;public void fubar() &#10;&#09;{&#10;&#09;&#09;double a;&#10;&#09;&#09;a = Math.abs(1.5);&#09;// VIOLATION&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;public class Test&#10;{&#10;&#09;public void fubar() &#10;&#09;{&#10;&#09;&#09;double a;&#10;&#09;&#09;a = 1.5;&#09;// FIXED&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidUsingMathClassMethodsOnConstantAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidConstructingPrimitiveType</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid constructing an object that has primitive type</description>
+		<reason>Unless the class must be compatible with JVMs predating Java 1.5, use either autoboxing or the valueOf() method when creating instances of Long, Integer, Short, Character, Byte, Double and Float.</reason>
+		<usageExample>Integer i = new Integer(1);&#09;// VIOLATION&#10;&#10;Should be written as:&#10;&#10;Integer i = 1;&#09;// CORRECTION&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidConstructingPrimitiveTypeAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>ShouldBeStaticInnerClass</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>An inner class shoule be static</description>
+		<reason>This class is an inner class, but does not use its embedded reference to the object which created it except during construction of the inner object.  This reference makes the instances of the class larger, and may keep the reference to the creator object alive longer than necessary.  If possible, the class should be made into a static inner class. Since the reference to the outer object is required during construction of the inner instance, the inner class will need to be refactored so as to pass a reference to the outer instance to the constructor for the inner class.</reason>
+		<usageExample>package com.rule;&#10;&#10;public class Declare_inner_class_static_violation&#10;{&#10;&#09;class Declare_inner_class_static_violation_INNER&#09;// VIOLATION&#10;&#09;{&#10;&#09;&#09;// no reference for Declare_inner_class_static_violation.this or its fields, methods.&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Declare_inner_class_static_correction&#10;{&#10;&#09;static class Declare_inner_class_static_correction_INNER&#09;// CORRECTION&#10;&#09;{&#10;&#09;&#09;// no reference for Declare_inner_class_static_correction.this or its fields, methods.&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.ShouldBeStaticInnerClassAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>FieldShouldBeStatic</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Final field should be static</description>
+		<reason>This class contains an instance final field that is initialized to a compile-time static value. Consider making the field static.</reason>
+		<usageExample>package com.rule;&#10;&#10;public class Always_declare_constant_field_static_violation&#10;{&#10;&#09;final int MAX = 1000;&#09;// VIOLATION&#10;&#09;final String NAME = &quot;Noname&quot;;&#09;// VIOLATION&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Always_declare_constant_field_static_correction&#10;{&#10;&#09;static final int MAX = 1000;&#09;// CORRECTION&#10;&#09;static final String NAME = &quot;Noname&quot;;&#09;// VIOLATION&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.FieldShouldBeStaticAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UncalledPrivateMethod</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Private method is never called</description>
+		<reason>This private method is never called. Although it is possible that the method will be invoked through reflection, it is more likely that the method is never used, and should be removed.&#10;&#10;Reference: FindBugs Bug Descriptions (http://findbugs.sourceforge.net/bugDescriptions.html)</reason>
+		<usageExample></usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UncalledPrivateMethodAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UnusedVariable</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Field or local variable is never used</description>
+		<reason>This field is never used. Consider removing it from the class.&#10;&#10;Reference: FindBugs Bug Descriptions (http://findbugs.sourceforge.net/bugDescriptions.html)</reason>
+		<usageExample></usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UnusedVariableAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>BoxedPrimitiveJustCallToString</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>A boxed primitive is allocated just to call toString()</description>
+		<reason>A boxed primitive is allocated just to call toString(). It is more effective to just use the static form of toString which takes the primitive value.</reason>
+		<usageExample>new Integer(1).toString()&#10;=&gt; Integer.toString(1)&#10;&#10;new Long(1).toString()&#10;=&gt; Long.toString(1)&#10;&#10;new Float(1.0).toString()&#10;=&gt; Float.toString(1.0)&#10;&#10;new Double(1.0).toString()&#10;=&gt; Double.toString(1.0)&#10;&#10;new Byte(1).toString()&#10;=&gt; Byte.toString(1)&#10;&#10;new Short(1).toString()&#10;=&gt; Short.toString(1)&#10;&#10;new Boolean(true).toString()&#10;=&gt; Boolean.toString(true)&#10;&#10;Reference: FindBugs Bug Descriptions (http://findbugs.sourceforge.net/bugDescriptions.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.BoxedPrimitiveJustCallToStringAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>ConstantExpression</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>A constant expression can be evaluated</description>
+		<reason>A constant expression can be evaluated at compile time. That means it has no variables in it.</reason>
+		<usageExample></usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.ConstantExpressionAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidConcatenatingStringUsingPlusOperatorInLoop</id>
+		<category>Performance</category>
+		<severity>Critical</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Method concatenates strings using + in a loop</description>
+		<reason>The method seems to be building a String using concatenation in a loop. In each iteration, the String is converted to a StringBuffer/StringBuilder, appended to, and converted back to a String. This can lead to a cost quadratic in the number of iterations, as the growing string is recopied in each iteration.</reason>
+		<usageExample>package com.rule;&#10;class String_concatenation_violation&#10;{&#10;&#09;public void concatValues()&#10;&#09;{&#10;&#09;&#09;String result = &quot;&quot;;&#10;&#09;&#09;for (int i = 0; i &lt; 20; i++) &#10;&#09;&#09;{&#10;&#09;&#09; result += getNextString();&#09;&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class String_concatenation_correction&#10;{&#10;&#09;public void concatValues(String strMainString, String strAppend1, String strAppend2)&#10;&#09;{&#10;&#09;&#09;String result = &quot;&quot;;&#10;&#09;&#09;StringBuffer buffer = new StringBuffer();&#10;&#09;&#09;for (int i = 0; i &lt; 20; i++) &#10;&#09;&#09;{&#10;&#09;&#09; buffer.append(getNextString());&#09;// CORRECTION&#10;&#09;&#09;}&#10;&#09;&#09;result = buffer.toString();&#09;&#09;&#09;// CORRECTION&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidConcatenatingStringUsingPlusOperatorInLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseEntrySetInsteadOfKeySet</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Use entrySet() instead of keySet()</description>
+		<reason>This method accesses the value of a Map entry, using a key that was retrieved from a keySet iterator. It is more efficient to use an iterator on the entrySet of the map, to avoid the Map.get(key) lookup.</reason>
+		<usageExample>package com.rule;&#10;&#09;&#10;import java.util.Map;&#10;import java.util.Set;&#10;import java.util.HashMap;&#10;import java.util.Iterator;&#10;&#10;public class Use_entrySet_instead_of_keySet_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;Map m = new HashMap();&#10;&#09;&#09;Iterator it = m.keySet().iterator();&#10;&#09;&#09;Object key = it.next();&#10;&#09;&#09;Object v = m.get(key);&#09;// Violation&#10;&#09;&#10;&#09;}&#10;&#09;&#09;&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Use_entrySet_instead_of_keySet_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;Map m = new HashMap();&#10;&#09;&#09;Set set = m.entrySet();&#09;//Correction.&#10;&#09;&#09;Object keyValuePair = it.next();&#10;&#09;}&#10;&#09;&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseEntrySetInsteadOfKeySetAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidCreatingThreadWithoutRunMethod</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid creating thread without run method</description>
+		<reason>A Thread which is created without specifying a run method does nothing other than a delay in performance.</reason>
+		<usageExample>public class Test&#10;{&#10;&#09;public void method() throws Exception&#10;&#09;{&#10;&#09;&#09;new Thread().start();&#09;//VIOLATION&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;public class Test&#10;{&#10;&#09;public void method(Runnable r) throws Exception&#10;&#09;{&#10;&#09;&#09;new Thread(r).start();&#09;//FIXED&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidCreatingThreadWithoutRunMethodAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidUnnecessarySubstring</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid using String.substring(0)</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;public class Avoid_unnecessary_substring_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;String str=&quot;AppPerfect&quot;;&#10;&#10;&#09;&#09;String str1 = str.substring(0);&#09;// Violation.&#10;&#09;}&#10;&#09;&#09;&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Avoid_unnecessary_substring_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;String str=&quot;AppPerfect&quot;;&#10;&#10;&#09;&#09;String str1 = str;&#09;//Correction.&#09;&#09;&#10;&#09;}&#10;&#09;&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidUnnecessarySubstringAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseSingleQuotesWhenConcatenatingCharacterToString</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Use single quotes instead of double qoutes when concatenating single character to a String.</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;public class Use_single_quotes_when_concatenating_character_to_String_violation&#10;{&#10;&#09;Use_single_quotes_when_concatenating_character_to_String_violation()&#10;&#09;{&#10;&#09;&#09;String s = &quot;a&quot;;&#10;&#09;&#09;s = s + &quot;a&quot;;&#09;// VIOLATION&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;public class Use_single_quotes_when_concatenating_character_to_String_correction&#10;{&#10;&#09;Use_single_quotes_when_concatenating_character_to_String_correction()&#10;&#09;{&#10;&#09;&#09;String s = &quot;a&quot;;&#10;&#09;&#09;s = s + &apos;a&apos;;&#09;// CORRECTION&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseSingleQuotesWhenConcatenatingCharacterToStringAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptyLoops</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid empty loops</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_empty_loops_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;int i = -5;&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;final int NEGATIVE = -1;&#10;&#10;&#09;&#09;while (i &lt; ZERO)&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#10;&#09;&#09;i = NEGATIVE;&#10;&#10;&#09;&#09;for(;i &lt; ZERO;)&#09;&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_empty_loops_correction&#10;{&#10;&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;int i = -5;&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;final int NEGATIVE = -1;&#10;&#10;&#09;&#09;/*&#10;&#09;&#09;while (i &lt; ZERO)&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;*/&#10;&#10;&#09;&#09;i = NEGATIVE;&#10;&#10;&#09;&#09;/*&#10;&#09;&#09;for(;i &lt; ZERO;)&#09;&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;*/&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptyLoopsAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidSynchronizedBlocksInLoop</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid synchronized blocks in loop for performance reasons</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;class Avoid_synchronized_blocks_in_loop_violation&#10;{&#10;&#09;public static void main(String[] args)&#10;&#09;{&#10;&#09;&#09;Object lock = new Object();&#10; &#10;&#09;&#09;for ( int i = &lt; 0; i &lt; args.length; i ++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;synchronized ( lock )&#09;// VIOLATION&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;System.out.println( args[ i ] );&#10;&#09;&#09;&#09;}&#10;&#09;&#09;}&#10;&#09;}&#10;&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Avoid_synchronized_blocks_in_loop_correction&#10;{&#10;&#09;public static void main(String[] args)&#10;&#09;{&#10;&#09;&#09;Object lock = new Object();&#10; &#10;&#09;&#09;synchronized ( lock )&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;&#09;for ( int i = &lt; 0; i &lt; args.length; i ++)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;System.out.println( args[ i ] );&#10;&#09;&#09;&#09;}&#10;&#09;&#09;}&#10;&#09;}&#10;&#09;&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidSynchronizedBlocksInLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidVectorElementAtInsideLoop</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid calling Vector.elementAt() inside loop</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;import java.util.Vector;&#10;&#10;class Avoid_Vector_elementAt_inside_loop_violation&#10;{&#10;&#09;public void method(Vector v)&#10;&#09;{&#10;&#09;&#09;int size = v.size();&#10;&#09;&#09;for(int i=size; i&gt;0; i--)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println((String) v.elementAt(size-i));&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.util.Vector;&#10;&#10;class Avoid_Vector_elementAt_inside_loop_correction&#10;{&#10;&#09;public void method(Vector v)&#10;&#09;{&#10;&#09;&#09;int size = v.size();&#10;&#09;&#09;Object vArr[] = v.toArray();&#10;&#09;&#09;for(int i=0; i&lt;size; i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println((String) vArr[i]);&#09;// CORRECTION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidVectorElementAtInsideLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidPollingLoops</id>
+		<category>Performance</category>
+		<severity>Critical</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Do not use polling loops / busy waiting</description>
+		<reason>Do not call Thread.sleep() for performance reasons.</reason>
+		<usageExample>package com.rule;&#10;&#10;public class Avoid_polling_loops_violation&#10;{&#10;&#09;boolean bContinue;&#10;&#09;&#10;&#09;void doSomething()&#10;&#09;{&#10;&#09;&#09;while(!bContinue)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;try&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;Thread.sleep(250);&#09;// VIOLATION&#10;&#09;&#09;&#09;}&#10;&#09;&#09;&#09;catch (InterruptedException e)&#10;&#09;&#09;&#09;{ }&#10;&#09;&#09;}&#10;&#09;&#09;&#10;&#09;&#09;// take action&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Avoid_polling_loops_correction&#10;{&#10;&#09;boolean bContinue;&#10;&#09;Object objLock;&#09;// notifyAll() will be called on this object from some other thread&#10;&#09;&#10;&#09;void doSomething()&#10;&#09;{&#10;&#09;&#09;synchronized(objLock)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;while(!bContinue)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;try&#10;&#09;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;&#09;objLock.wait();&#09;// CORRECTION&#10;&#09;&#09;&#09;&#09;}&#10;&#09;&#09;&#09;&#09;catch (InterruptedException e)&#10;&#09;&#09;&#09;&#09;{ }&#10;&#09;&#09;&#09;}&#10;&#09;&#09;}&#10;&#09;&#09;&#10;&#09;&#09;// take action&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidPollingLoopsAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidSynchronizedMethodsInLoop</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid synchronized methods in loop for performance reasons</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;class Avoid_synchronized_methods_in_loop_violation&#10;{&#10;&#09;public synchronized Object remove()&#10;&#09;{&#10;&#09;&#09;Object obj = null;&#10;&#09;&#09;//...&#10;&#09;&#09;return obj;&#10;&#09;}&#10;&#09;public void removeAll()&#10;&#09;{&#10;&#09;&#09;for(;;)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;remove();&#09;&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Avoid_synchronized_methods_in_loop_correction&#10;{&#10;&#09;public Object remove()&#09;// CORRECTION&#10;&#09;{&#10;&#09;&#09;Object obj = null;&#10;&#09;&#09;//....&#10;&#09;&#09;return obj;&#10;&#09;}&#10;&#09;public synchronized void removeAll()&#10;&#09;{&#10;&#09;&#09;for(;;)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;remove();&#09;&#09;// CORRECTION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidSynchronizedMethodsInLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidObjectInstantiationInLoops</id>
+		<category>Performance</category>
+		<severity>Critical</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid object instantiation in frequently executed code for performance reasons</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;import java.util.ArrayList;&#10;&#10;class Avoid_object_instantiation_violation&#10;{&#10;&#09;public void action()&#10;&#09;{&#10;&#09;&#09;ArrayList al = getNameAndValues();&#10;&#09;&#09;for (int i = 0; i &lt; al.size(); i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;ClassName cn = (ClassName) al.get(i);&#10;&#09;&#09;&#09;String sArr[] = new String[] { cn.getName(), cn.getValue() };&#09;//Violation&#10;&#09;&#09;&#09;//...&#10;&#09;&#09;}&#10;&#09;}&#10;&#09;&#10;&#09;private ArrayList getNameAndValues()&#10;&#09;{&#10;&#09;&#09;ArrayList al = new ArrayList();&#10;&#09;&#09;// populate list&#10;&#09;&#09;return al;&#10;&#09;}&#10;&#09;&#10;&#09;private class ClassName&#10;&#09;{&#10;&#09;&#09;String name;&#10;&#09;&#09;String value;&#10;&#09;&#09;&#10;&#09;&#09;String getName()&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return name;&#10;&#09;&#09;}&#10;&#09;&#09;String getValue()&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return value;&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.util.ArrayList;&#10;&#10;class Avoid_object_instantiation_correction&#10;{&#10;&#09;public void action()&#10;&#09;{&#10;&#09;&#09;ArrayList al = getNameAndValues();&#10;&#09;&#09;String sArr[] = new String[2];&#09;//Correction&#10;&#09;&#09;for (int i = 0; i &lt; al.size(); i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;ClassName cn = (ClassName) al.get(i);&#10;&#09;&#09;&#09;sArr[0] = cn.getName();&#10;&#09;&#09;&#09;sArr[1] = cn.getValue();&#10;&#09;&#09;&#09;//...&#10;&#09;&#09;}&#10;&#09;}&#10;&#09;&#10;&#09;private ArrayList getNameAndValues()&#10;&#09;{&#10;&#09;&#09;ArrayList al = new ArrayList();&#10;&#09;&#09;// populate list&#10;&#09;&#09;return al;&#10;&#09;}&#10;&#09;&#10;&#09;private class ClassName&#10;&#09;{&#10;&#09;&#09;String name;&#10;&#09;&#09;String value;&#10;&#09;&#09;&#10;&#09;&#09;String getName()&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return name;&#10;&#09;&#09;}&#10;&#09;&#09;String getValue()&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return value;&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidObjectInstantiationInLoopsAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>PlaceTryCatchOutOfLoop</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Placing "try/catch/finally" blocks inside loops can slow down the execution of code</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;import java.io.InputStream;&#10;import java.io.IOException;&#10;&#10;class Place_try_catch_out_of_loop_violation&#10;{&#10;&#09;void method (InputStream is)&#10;&#09;{&#10;&#09;&#09;int ZERO = 0;&#10;&#09;&#09;int TEN = 10;&#10;&#09;&#09;int count = 0;&#10;&#10;&#09;&#09;for (int i = ZERO; i &lt; TEN; i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;try&#09;// VIOLATION&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;count += is.read();&#10;&#09;&#09;&#09;}&#10;&#09;&#09;&#09;catch (IOException ioe)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ioe.printStackTrace();&#10;&#09;&#09;&#09;}&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.io.InputStream;&#10;import java.io.IOException;&#10;&#10;class Place_try_catch_out_of_loop_correction&#10;{&#10;&#09;void method (InputStream is)&#10;&#09;{&#10;&#09;&#09;int ZERO = 0;&#10;&#09;&#09;int TEN = 10;&#10;&#09;&#09;int count = 0;&#10;&#10;&#09;&#09;try&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;&#09;for (int i = ZERO; i &lt; TEN; i++)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;count += is.read ();&#10;&#09;&#09;&#09;}&#10;&#09;&#09;}&#10;&#09;&#09;catch (IOException ioe)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;ioe.printStackTrace();&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.PlaceTryCatchOutOfLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AlwaysReuseImmutableConstantObjectsForBetterMemoryUtilization</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Creation of constant immutable objects that are not assigned to static final variables lead to unnecessary memory consumption</description>
+		<reason></reason>
+		<usageExample>public class Test&#10;{&#10;&#09;protected Object[] getObjects() &#10;&#09;{&#10;&#09;&#09;return new Object[0];&#09;// VIOLATION&#10;&#09;}&#10;&#10;&#09;publicstatic Integer convertToInt(String s) &#10;&#09;{&#10;&#09;&#09;if (s == null || s.length() == 0)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return new Integer(-1);&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;&#09;else&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return new Integer(s);&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;public class Test &#10;{&#10;&#09;public static final Object[] NO_OBJECTS = new Object[0];&#10;&#10;&#09;protected Object[] getObjects() &#10;&#09;{&#10;&#09;&#09;return NO_OBJECTS;&#09;// FIXED&#10;&#09;}&#10;&#10;&#09;private static final Integer INT_N1 = new Integer(-1);&#10;&#10;&#09;public static Integer convertToIn(String s) {&#10;&#09;&#09;if (s == null || s.length() == 0)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return INT_N1;&#09;// FIXED&#10;&#09;&#09;}&#10;&#09;&#09;else&#10;&#09;&#09;{&#10;&#09;&#09;&#09;return new Integer(s);&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AlwaysReuseImmutableConstantObjectsForBetterMemoryUtilizationAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>EnsureEfficientRemovalOfElementsInCollection</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Searching a collection to fetch the element to remove is inefficient</description>
+		<reason></reason>
+		<usageExample>public class Test &#10;{&#10;&#09;public void someMethod(Collection collection)&#10;&#09;{&#10;&#09;&#09;Iterator iter = collection.iterator();&#10;&#09;&#09;while (iter.hasNext()) &#10;&#09;&#09;{&#10;&#09;&#09;&#09;Object element = iter.next();&#10;&#09;&#09;&#09;collection.remove(element);&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;public class Test &#10;{&#10;&#09;public void someMethod(Collection collection)&#10;&#09;{&#10;&#09;&#09;Iterator iter = collection.iterator();&#10;&#09;&#09;while (iter.hasNext()) &#10;&#09;&#09;{&#10;&#09;&#09;&#09;iter.remove();&#09;// FIXED&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.EnsureEfficientRemovalOfElementsInCollectionAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>EnsureEfficientRemovalOfMapEntries</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Searching a keyset / entryset to fetch the key to remove the element is inefficient</description>
+		<reason></reason>
+		<usageExample>import java.util.*;&#10;&#10;public class Test &#10;{&#10;&#09;public void someMethod(HashMap collection)&#10;&#09;{&#10;&#09;&#09;Set keySet = collection.keySet();&#10;&#09;&#09;Iterator keyIter = keySet.iterator();&#10;&#09;&#09;while (keyIter.hasNext()) &#10;&#09;&#09;{&#10;&#09;&#09;&#09;Object key = keyIter.next();&#10;&#09;&#09;&#09;collection.remove(key);&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;or another case when we iterate on entry set:&#10;&#10;public class Test &#10;{&#10;&#09;public void someMethod(HashMap collection)&#10;&#09;{&#10;&#09;&#09;Set entrySet = collection.entrySet();&#10;&#09;&#09;Iterator entriesIter = entrySet.iterator();&#10;&#09;&#09;while (entriesIter.hasNext()) &#10;&#09;&#09;{&#10;&#09;&#09;&#09;(Map.Entry) entry = (Map.Entry)entriesIter.next();&#10;&#09;&#09;&#09;Object key = entry.getKey();&#10;&#09;&#09;&#09;collection.remove(key);&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;public class Test &#10;{&#10;&#09;public void someMethod(HashMap collection)&#10;&#09;{&#10;&#09;&#09;Set keySet = collection.keySet();&#10;&#09;&#09;Iterator keyIter = keySet.iterator();&#10;&#09;&#09;while (keyIter.hasNext()) &#10;&#09;&#09;{&#10;&#09;&#09;&#09;keyIter.remove();&#09;// FIXED&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.EnsureEfficientRemovalOfMapEntriesAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>EnsureEfficientIterationOverMapEntries</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Using a keyset to iterate over a map, and then requesting values for each key is inefficient</description>
+		<reason></reason>
+		<usageExample>import java.util.Iterator;&#10;import java.util.Map;&#10;&#10;public class Test&#10;{&#10;&#09;public void inefficientIteration(Map map)&#10;&#09;{&#10;&#09;&#09;Iterator iter = map.keySet().iterator();&#10;&#09;&#09;while (iter.hasNext()) {&#10;&#09;&#09;&#09;Object key = iter.next();&#10;&#09;&#09;&#09;Object value = map.get(key);&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;import java.util.Iterator;&#10;import java.util.Map;&#10;&#10;public class Test&#10;{&#10;&#09;public void efficientIteration(Map map)&#10;&#09;{&#10;&#09;&#09;Iterator iter = map.entrySet().iterator();&#10;&#09;&#09;while (iter.hasNext()) {&#10;&#09;&#09;&#09;Map.Entry entry = (Map.Entry)iter.next();&#10;&#09;&#09;&#09;Object key = entry.getKey();&#10;&#09;&#09;&#09;Object value = entry.getValue();&#09;// FIXED&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.EnsureEfficientIterationOverMapEntriesAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptyIf</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid empty "if" block structure</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_empty_if_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;int i = 10;&#10;&#09;&#09;if (i &lt; ZERO)&#09;&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;i = ZERO;&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_empty_if_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;int i = 10;&#10;&#09;&#09;/*&#10;&#09;&#09;if (i &lt; ZERO)&#09;&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;*/&#10;&#09;&#09;i = ZERO;&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptyIfAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptyStaticInitializer</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid empty static initializer</description>
+		<reason>Since the static initializer contains no code, it can be safely removed.</reason>
+		<usageExample>public class Test&#10;{&#10;&#09;static&#09;// VIOLATION&#10;&#09;{&#10;  &#09;&#09;// empty&#10; &#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;public class Test&#10;{&#10;&#09;// ...&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptyStaticInitializerAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidSynchronizedModifierInMethod</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid synchronized modifier in method for performace reasons</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;import java.io.ObjectOutputStream;&#10;import java.io.IOException;&#10;&#10;class Avoid_synchronized_modifier_in_method_violation&#10;{&#10;&#09;public synchronized void writeToStream(String s)throws IOException&#09;// VIOLATION&#10;&#09;{&#10;&#09;&#09;//....&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.io.ObjectOutputStream;&#10;import java.io.IOException;&#10;&#10;class Avoid_synchronized_modifier_in_method_correction&#10;{&#10;&#09;public void writeToStream(String s)throws IOException&#09;&#09;// CORRECTION&#10;&#09;{&#10;&#09;&#09;//....&#10;&#09;&#09;synchronized (this)// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;&#09;//....&#10;&#09;&#09;}&#10;&#10;&#09;&#09;//....&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidSynchronizedModifierInMethodAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidWriteByteMethodInLoop</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid writing single byte in loop</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;class Avoid_writeByte_method_violation&#10;{&#10;&#09;public static void main(String args[])&#10;&#09;{&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;final int ONE = 1;&#10;&#09;&#09;final int TEN = 10;&#10;&#09;&#09;String strFileName = &quot;C:\\demo.java&quot;;&#09;//$NON-NLS-1$&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;&#09;java.io.FileOutputStream fos = new java.io.FileOutputStream(strFileName);&#10;&#09;&#09;&#09;java.io.DataOutputStream ds = new java.io.DataOutputStream(fos);&#10;&#10;&#09;&#09;&#09;int i = ZERO;&#10;&#09;&#09;&#09;while(i &lt; TEN)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ds.writeByte(ONE);&#09;// VIOLATION&#10;&#09;&#09;&#09;&#09;i++;&#10;&#09;&#09;&#09;}&#10;&#10;&#09;&#09;&#09;for(i=ZERO; i&lt;TEN; i++)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ds.writeByte(ONE);&#09;// VIOLATION&#10;&#09;&#09;&#09;}&#10;&#10;&#09;&#09;&#09;i = ZERO;&#10;&#10;&#09;&#09;&#09;do&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ds.writeByte(ONE);&#09;// VIOLATION&#10;&#09;&#09;&#09;&#09;i++;&#10;&#09;&#09;&#09;}&#10;&#09;&#09;&#09;while(i&lt;TEN);&#10;&#09;&#09;}&#10;&#09;&#09;catch(java.io.IOException e)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;e.printStackTrace();&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Avoid_writeByte_method_correction&#10;{&#10;&#09;public static void main(String args[])&#10;&#09;{&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;final char ONE = &apos;1&apos;;&#10;&#09;&#09;final int TEN = 10;&#10;&#10;&#09;&#09;String strFileName = &quot;C:\\demo.java&quot;;&#09;//$NON-NLS-1$&#10;&#09;&#09;byte bArr[] = new byte[10];&#10;&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;&#09;java.io.FileOutputStream fos = new java.io.FileOutputStream(strFileName);&#10;&#09;&#09;&#09;java.io.DataOutputStream ds = new java.io.DataOutputStream(fos);&#10;&#10;&#09;&#09;&#09;int i = ZERO;&#10;&#09;&#09;&#09;while(i &lt; TEN)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;bArr[i] = ONE;&#10;&#09;&#09;&#09;&#09;i++;&#10;&#09;&#09;&#09;}&#10;&#10;&#09;&#09;&#09;ds.write(bArr, ZERO, bArr.length);&#09;// CORRECTION&#10;&#09;&#09;}&#10;&#09;&#09;catch(java.io.IOException e)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;e.printStackTrace();&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidWriteByteMethodInLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidBooleanArray</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Do not use array of boolean</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;public class Avoid_boolean_array_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;boolean[] b = new boolean[]{true, false, true};&#09;// VIOLATION&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Avoid_boolean_array_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;BitSet bs = new BitSet(3);&#09;// CORRECTION&#10;&#09;&#09;bs.set(0);&#10;&#09;&#09;bs.set(2);&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidBooleanArrayAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidUsingStringTokenizer</id>
+		<category>Performance</category>
+		<severity>Critical</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid using StringTokenizer to improve performace</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;class Avoid_using_StringTokenizer_violation&#10;{&#10;&#09;public void method(String str)&#10;&#09;{&#10;&#09;&#09;StringTokenizer strtok = new StringTokenizer(str);&#09;// VIOLATION&#10;&#09;&#09;while(strtok.hasMoreTokens())&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(strtok.nextToken());&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Avoid_using_StringTokenizer_correction&#10;{&#10;&#09;public void method(String str)&#10;&#09;{&#10;&#09;&#09;String[] parts = breakUp(str);&#09;// CORRECTION&#10;&#09;&#09;int len = parts.length;&#10;&#09;&#09;for(int i=len; i&gt;0; i--)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(parts[len-i]);&#10;&#09;&#09;}&#10;&#09;}&#10;&#10;&#09;String[] breakUp(String str)&#10;&#09;{&#10;&#09;&#09;String strParts[];&#10;&#09;&#09;// break the string into parts&#10;&#09;&#09;return strParts;&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidUsingStringTokenizerAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidInstantiationForGetClass</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Do not create instances just to call getClass on it</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;public class Avoid_instantiation_for_getClass_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;Class c = (new Avoid_instantiation_for_getClass_violation()).getClass();&#09;// VIOLATION&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Avoid_instantiation_for_getClass_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;Class c = Avoid_instantiation_for_getClass_correction.class;&#09;// CORRECTION&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidInstantiationForGetClassAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseStringEqualsIgnoreCase</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Use String.equalsIgnoreCase() method</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;public class Use_String_equalsIgnoreCase_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;String str = &quot;APPPERFECT&quot;;&#10;&#09;&#09;String str1 = &quot;appperfect&quot;;&#10;&#09;&#10;&#09;&#09;if(str1.toUpperCase().equals(str))&#09;// Violation&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(&quot;Strings are equals&quot;);&#10;&#09;&#09;}&#09;&#10;&#09;}&#10;&#09;&#09;&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;public class Use_String_equalsIgnoreCase_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;String str = &quot;APPPERFECT&quot;;&#10;&#09;&#09;String str1 = &quot;appperfect&quot;;&#10;&#09;&#10;&#09;&#09;if(str1.equalsIgnoreCase(str))&#09;// Correction.&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(&quot;Strings are equals&quot;);&#10;&#09;&#09;}&#09;&#10;&#09;}&#10;&#09;&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseStringEqualsIgnoreCaseAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptyTryBlocks</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid empty "try" block structure</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_empty_try_blocks_violation&#10;{&#10;&#09;void method (int i, int j)&#10;&#09;{&#10;&#09;&#09;try&#09;&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;catch(ArithmeticException ae)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;i = j;&#10;&#09;&#09;&#09;ae.printStackTrace();&#10;&#09;&#09;}&#10;&#09;}&#10;&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_empty_try_blocks_correction&#10;{&#10;&#09;void method (int i, int j)&#10;&#09;{&#10;&#09;&#09;/*&#10;&#09;&#09;try&#09;&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;catch(ArithmeticException ae)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;i = j;&#10;&#09;&#09;&#09;ae.printStackTrace();&#10;&#09;&#09;}&#10;&#09;&#09;*/&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptyTryBlocksAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseToArrayWithArrayAsParameter</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Use toArray(Object[]) instead of toArray() on collection</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;import java.util.Collection;&#10;import java.util.List;&#10;import java.util.ArrayList;&#10;&#10;class Use_toArray_with_array_as_parameter&#10;{&#10;&#09;public void print()&#10;&#09;{&#10;&#09;&#09;Collection c = new ArrayList();&#10;&#09;&#09;&#10;&#09;&#09;c.add(&quot;AppPerfect&quot;);&#10;&#09;&#09;c.add(&quot;TestStudio&quot;);&#10;&#10;&#09;&#09;Object[] obj  = c.toArray();&#09;// Violation&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.util.Collection;&#10;import java.util.List;&#10;import java.util.ArrayList;&#10;&#10;class Use_toArray_with_array_as_parameter&#10;{&#10;&#09;public void print()&#10;&#09;{&#10;&#09;&#09;Collection c = new ArrayList();&#10;&#09;&#09;&#10;&#09;&#09;c.add(&quot;AppPerfect&quot;);&#10;&#09;&#09;c.add(&quot;TestStudio&quot;);&#10;&#09;&#09;&#09;&#10;&#09;&#09;String[] x = (String[]) c.toArray(new String[2]);&#09;//Correction&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseToArrayWithArrayAsParameterAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidUsingThreadYield</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid using Thread.yield()</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;public class Avoid_using_Thread_yield_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;//......&#10;&#09;&#09;Thread.yield();&#09;// VIOLATION&#10;&#09;&#09;//......&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;public class Avoid_using_Thread_yield_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;//......&#10;&#09;&#09;this.wait();&#09;// CORRECTION&#10;&#09;&#09;//......&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidUsingThreadYieldAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidReadByteMethodInLoop</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid reading single byte in loop</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_readByte_method_in_loop_violation&#10;{&#10;&#09;public static void main(String args[])&#10;&#09;{&#10;&#09;&#09;String strFilePath = &quot;c:\temp.java&quot;;&#09;//$NON-NLS-1$&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;final int TEN = 10;&#10;&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#10;&#09;&#09;&#09;java.io.FileInputStream fis = new java.io.FileInputStream(strFilePath);&#10;&#09;&#09;&#09;java.io.DataInputStream ds = new java.io.DataInputStream(fis);&#10;&#10;&#09;&#09;&#09;int i = ZERO;&#10;&#09;&#09;&#09;while(i &lt; TEN)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ds.readByte();&#09;&#09;// VIOLATION&#10;&#09;&#09;&#09;&#09;i++;&#10;&#09;&#09;&#09;}&#10;&#10;&#09;&#09;&#09;for(i=ZERO; i&lt;TEN; i++)&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ds.readByte();&#09;&#09;// VIOLATION&#10;&#09;&#09;&#09;}&#10;&#10;&#09;&#09;&#09;i = ZERO;&#10;&#10;&#09;&#09;&#09;do&#10;&#09;&#09;&#09;{&#10;&#09;&#09;&#09;&#09;ds.readByte();&#09;&#09;// VIOLATION&#10;&#09;&#09;&#09;&#09;i++;&#10;&#09;&#09;&#09;}&#10;&#09;&#09;&#09;while(i&lt;TEN);&#10;&#09;&#09;}&#10;&#09;&#09;catch(java.io.IOException e)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;e.printStackTrace();&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_readByte_method_in_loop_correction&#10;{&#10;&#09;public static void main(String args[])&#10;&#09;{&#10;&#10;&#09;&#09;final int TEN = 10;&#10;&#09;&#09;byte bArr[] = new byte[TEN];&#10;&#09;&#09;String strFilePath = &quot;c:\temp.java&quot;;&#09;//$NON-NLS-1$&#10;&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;&#09;java.io.FileInputStream fis = new java.io.FileInputStream(strFilePath);&#10;&#09;&#09;&#09;java.io.DataInputStream ds = new java.io.DataInputStream(fis);&#10;&#10;&#09;&#09;&#09;ds.read(bArr);&#09;&#09;// CORRECTION&#10;&#10;&#09;&#09;}&#10;&#09;&#09;catch(java.io.IOException e)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;e.printStackTrace();&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidReadByteMethodInLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidLinkedList</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid using LinkedList</description>
+		<reason>Avoid LinkedLists instead use Vector / ArrayList as LinkedList implementation has a performance overhead for indexed access.</reason>
+		<usageExample>package com.rule;&#10;&#10;import java.util.LinkedList;&#09;// VIOLATION&#10;&#10;class Avoid_LinkedLists_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;LinkedList list = new LinkedList();&#10;&#09;&#09;if(list != null)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;list = null;&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.util.ArrayList;&#09;&#09;// CORRECTION&#10;&#10;class Avoid_LinkedLists_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09; final int SIZE = 10;&#10;&#09;&#09; ArrayList list = new ArrayList(SIZE);&#10;&#10;&#09;&#09; if(list != null)&#10;&#09;&#09; {&#10;&#09;&#09; &#09;list = null;&#10;&#09;&#09; }&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidLinkedListAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptySynchronizedBlock</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Empty synchronized blocks</description>
+		<reason>Remove empty synchronized blocks to avoid unnecessary overheads</reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_empty_synchronized_block_violation&#10;{&#10;&#09;void method()&#10;&#09;{&#10;&#09;&#09;synchronized(this)&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_empty_synchronized_block_violation&#10;{&#10;&#09;void method()&#10;&#09;{&#10;&#09;&#09;/*&#10;&#09;&#09;synchronized(this)&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;&#09;*/&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptySynchronizedBlockAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseDataSourceInsteadOfDriverManager</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Using DataSource is a preferred way for obtaining the Connection objects</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;import java.sql.Connection;&#10;import java.sql.DriverManager;&#10;import java.sql.SQLException;&#10;&#10;public class Use_DataSource_instead_of_DriverManager_violation&#10;{&#10;&#09;public void method(String url) throws SQLException&#10;&#09;{&#10;&#09;&#09;Connection conn = DriverManager.getConnection(url);&#09;// VIOLATION&#10;&#09;&#09;// use conn&#10;&#09;}&#10;&#09;&#10;&#09;public void initDriverManager()&#10;&#09;{&#10;&#09;&#09;// load driver class&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.sql.Connection;&#10;import java.sql.SQLException;&#10;import javax.sql.DataSource;&#10;&#10;class Use_DataSource_instead_of_DriverManager_correction&#10;{&#10;&#09;DataSource ds;&#10;&#10;&#09;public void method() throws SQLException&#10;&#09;{&#10;&#09;&#09;Connection conn = ds.getConnection();&#09;// CORRECTION&#10;&#09;&#09;// use conn&#10;&#09;}&#10;&#09;&#10;&#09;public void initDataSource()&#10;&#09;{&#10;&#09;&#09;// initialize ds&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseDataSourceInsteadOfDriverManagerAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidUsingStringCharAt</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid using String.charAt()</description>
+		<reason>Use char[] representation of the string instead of using String.charAt().</reason>
+		<usageExample>package com.rule;&#10;class Avoid_using_String_charAt_violation&#10;{&#10;&#09;public void method(String str)&#10;&#09;{&#10;&#09;&#09;for(int i=0; i&lt;str.length(); i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(str.charAt(i));&#09;// VIOLATION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Avoid_using_String_charAt_correction&#10;{&#10;&#09;public void method(String str)&#10;&#09;{&#10;&#09;&#09;char[] carr = str.toCharArray();&#09;&#09;// CORRECTION&#10;&#09;&#09;for(int i=0; i&lt;carr.length; i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(carr[i]);&#09;&#09;// CORRECTION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidUsingStringCharAtAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptyFinallyBlock</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid empty "finally" block structure</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_empty_finally_blocks_violation&#10;{&#10;&#09;void method (int i)&#10;&#09;{&#10;&#09;&#09;final int ZERO =0;&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;i = ZERO;&#10;&#09;&#09;}&#10;&#09;&#09;catch(ArithmeticException ae)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;ae.printStackTrace();&#10;&#09;&#09;}&#10;&#09;&#09;finally&#09;&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_empty_finally_blocks_correction&#10;{&#10;&#09;void method (int i)&#10;&#09;{&#10;&#09;&#09;final int ZERO = 0;&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;i = ZERO;&#10;&#09;&#09;}&#10;&#09;&#09;catch(ArithmeticException ae)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;ae.printStackTrace();&#10;&#09;&#09;}&#10;&#09;&#09;/*&#10;&#09;&#09;finally&#09;&#09;// COORECTION&#10;&#09;&#09;{&#10;&#10;&#09;&#09;}&#10;&#09;&#09;*/&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptyFinallyBlockAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidEmptyCatchBlocks</id>
+		<category>Performance</category>
+		<severity>Low</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Avoid empty "catch" block structure</description>
+		<reason></reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_empty_catch_blocks_violation&#10;{&#10;&#09;void method(int i)&#10;&#09;{&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;&#09;i++;&#10;&#09;&#09;}&#10;&#09;&#09;catch(ArithmeticException ae)&#09;&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_empty_catch_blocks_correction&#10;{&#10;&#09;void method (int i)&#10;&#09;{&#10;&#09;&#09;try&#10;&#09;&#09;{&#10;&#09;&#09;&#09;i++;&#10;&#09;&#09;}&#10;&#09;&#09;catch(ArithmeticException ae)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;ae.printStackTrace();&#09;&#09;&#09;// CORRECTION&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidEmptyCatchBlocksAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>DefineInitialCapacities</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>No</refactoringSupport>
+		<description>Define initial capacities</description>
+		<reason>Expansion of array capacity involves allocating a larger array and copying the contents of the old array to a new one. Eventually, the old array object gets reclaimed by the garbage collector. Array expansion is an expensive operation. Usually one may have a pretty good guess at the expected size which should be used instead of the default.</reason>
+		<usageExample>package com.rule;&#10;&#10;import java.util.ArrayList;&#10;&#10;class Define_initial_capacities_violation&#10;{&#10;&#09;private ArrayList al = new ArrayList();&#09;&#09;&#09;// VIOLATION&#10;&#10;&#09;public int method()&#10;&#09;{&#10;&#09;&#09;return al.size();&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;import java.util.ArrayList;&#10;&#10;class Define_initial_capacities_correction&#10;{&#10;&#09;private final int SIZE = 10;&#10;&#09;private ArrayList al = new ArrayList(SIZE);&#09;&#09;// CORRECTION&#10;&#10;&#09;public int method()&#10;&#09;{&#10;&#09;&#09;return al.size();&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.DefineInitialCapacitiesAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseShiftOperators</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Use shift operator</description>
+		<reason>Shift operators are faster than multiplication and division.</reason>
+		<usageExample>package com.rule;&#10;class Use_shift_operators_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;int x = 0;&#10;&#09;&#09;int X = x / 4;&#09;&#09;// VIOLATION&#10;&#09;&#09;int Y = x * 2;&#09;&#09;// VIOLATION&#10;&#09;&#09;X++;&#10;&#09;&#09;Y++;&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Use_shift_operators_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;int x = 0;&#10;&#09;&#09;int X = x &gt;&gt; 2;&#09;&#09;// CORRECTION&#10;&#09;&#09;int Y = x &lt;&lt; 1;&#09;&#09;// CORRECTION&#10;&#09;&#09;X++;&#10;&#09;&#09;Y++;&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseShiftOperatorsAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidMethodCallsInLoop</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid method calls in loop</description>
+		<reason>If possible avoid using length(), size() etc. method calls in loop condition statement, there can be a performance hit.</reason>
+		<usageExample>package com.rule;&#10;&#10;class Avoid_method_calls_in_loop_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;String str = &quot;Hello&quot;;&#10;&#09;&#09;for (int i = 0; i &lt; str.length(); i++)&#09;&#09;// VIOLATION&#10;&#09;  &#09;{&#10;&#09;&#09;&#09;i++;&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;&#10;class Avoid_method_calls_in_loop_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;String str = &quot;Hello&quot;;&#10;&#09;&#09;int len = str.length();&#09;&#09;// CORRECTION&#10;&#09;&#09;for (int i = 0; i &lt; len ; i++)&#10;&#09;&#09;{&#10;&#09;&#09;&#09;i++;&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidMethodCallsInLoopAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>UseShortCircuitBooleanOperators</id>
+		<category>Performance</category>
+		<severity>High</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Use short-circuit boolean operators</description>
+		<reason>Short-circuit booleans should be used as that speeds up the test slightly in almost every case.</reason>
+		<usageExample>package com.rule;&#10;class Use_short_circuit_boolean_operators_violation&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;if(sValue.equals(&quot;true&quot;)  | sValue.equals(&quot;false&quot;))&#09;// VIOLATION&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(&quot;valid boolean&quot;);&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Should be written as:&#10;&#10;package com.rule;&#10;class Use_short_circuit_boolean_operators_correction&#10;{&#10;&#09;public void method()&#10;&#09;{&#10;&#09;&#09;if(sValue.equals(&quot;true&quot;) || sValue.equals(&quot;false&quot;))&#09;// CORRECTION&#10;&#09;&#09;{&#10;&#09;&#09;&#09;System.out.println(&quot;valid boolean&quot;);&#10;&#09;&#09;}&#10;&#09;}&#10;}&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.UseShortCircuitBooleanOperatorsAnalyzer</analyzerClass>
+	</rule>
+	<rule>
+		<id>AvoidUnnecessaryIf</id>
+		<category>Performance</category>
+		<severity>Medium</severity>
+		<refactoringSupport>Yes</refactoringSupport>
+		<description>Avoid unnecessary if statements</description>
+		<reason>Avoid unnecessary if statements</reason>
+		<usageExample>&#10;&#10;Reference: Java Code Optimization (http://appperfect.com/support/java-coding-rules/optimization.html)</usageExample>
+		<analyzerClass>vn.dongpv.pde.rule.analyzer.AvoidUnnecessaryIfAnalyzer</analyzerClass>
+	</rule>
+</rules>
